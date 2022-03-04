@@ -4,7 +4,7 @@ namespace App\Model;
 
 use JMS\Serializer\Annotation\Type;
 
-class Data
+class Fixture
 {
     #[Type("array")]
     public array $fixture;

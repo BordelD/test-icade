@@ -2,7 +2,6 @@
 
 namespace App\Client;
 
-use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -10,25 +9,13 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class FootballClient
 {
-    public function __construct(private HttpClientInterface $apiFootball, private SerializerInterface $serializer)
+    public function __construct(private HttpClientInterface $apiFootball)
     {
     }
 
-    /**
-     * @param int $leagueId
-     * @param int $season
-     * @return array
-     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
-     *
-     * @todo deserialize object is life
-     */
-    public function getFixture(int $leagueId, int $season)
+    public function getMatches(int $leagueId, int $season): string
     {
-        $response = $this->apiFootball->request(
+        return $this->getApiContent(
             Request::METHOD_GET,
             'v3/fixtures',
             [
@@ -38,11 +25,29 @@ class FootballClient
                 ]
             ]
         );
+    }
+
+    public function getFixtureDetails(string $fixtureId): string
+    {
+        return $this->getApiContent(
+            Request::METHOD_GET,
+            'v3/fixtures/events',
+            [
+                'query' => [
+                    'fixture' => $fixtureId
+                ]
+            ]
+        );
+    }
+
+    private function getApiContent(string $method, string $url, array $options): string
+    {
+        $response = $this->apiFootball->request($method, $url, $options);
 
         if ($response->getStatusCode() !== Response::HTTP_OK) {
             throw new BadRequestHttpException($response->getContent()); // @todo format response
         }
 
-        return $this->serializer->deserialize($response->getContent(),\App\Model\Response::class, 'json');
+        return $response->getContent();
     }
 }

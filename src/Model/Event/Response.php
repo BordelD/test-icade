@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace App\Model\Event;
 
 use JMS\Serializer\Annotation\Type;
 
@@ -14,6 +14,6 @@ class Response
     #[Type("array")]
     public array $errors;
 
-    #[Type("array<App\Model\Fixture>")]
+    #[Type("array<App\Model\Event\Event>")]
     public array $response;
 }
