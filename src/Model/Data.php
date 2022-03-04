@@ -12,6 +12,8 @@ class Data
     #[Type("App\Model\Teams")]
     public Teams $teams;
 
+    public League $league;
+
     #[Type("array")]
     public array $score;
 
