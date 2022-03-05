@@ -54,3 +54,6 @@ cc: sf
 
 watch: ## Watch js and css
 	yarn watch
+
+test:
+	@$(PHP) ./vendor/bin/phpunit
