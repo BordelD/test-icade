@@ -16,7 +16,6 @@ class FootballClient
     public function getMatches(int $leagueId, int $season): string
     {
         return $this->getApiContent(
-            Request::METHOD_GET,
             'v3/fixtures',
             [
                 'query' => [
@@ -30,7 +29,6 @@ class FootballClient
     public function getFixtureDetails(string $fixtureId): string
     {
         return $this->getApiContent(
-            Request::METHOD_GET,
             'v3/fixtures/events',
             [
                 'query' => [
@@ -40,9 +38,21 @@ class FootballClient
         );
     }
 
-    private function getApiContent(string $method, string $url, array $options): string
+    public function searchTeam(string $search): string
     {
-        $response = $this->apiFootball->request($method, $url, $options);
+        return $this->getApiContent(
+            'v3/teams',
+            [
+                'query' => [
+                    'search' => $search
+                ]
+            ]
+        );
+    }
+
+    private function getApiContent(string $url, array $options): string
+    {
+        $response = $this->apiFootball->request(Request::METHOD_GET, $url, $options);
 
         if ($response->getStatusCode() !== Response::HTTP_OK) {
             throw new BadRequestHttpException($response->getContent()); // @todo format response

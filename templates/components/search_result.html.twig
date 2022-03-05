@@ -1,0 +1,7 @@
+{% if teamInfos %}
+    {% for teamInfo in teamInfos %}
+        <li class="list-group-item" role="option" data-autocomplete-value="{{ teamInfo.team.id }}">{{ teamInfo.team.name }}</li>
+    {% endfor %}
+{% else %}
+    <div class="list-group-item" role="option" aria-disabled="true">No results found!</div>
+{% endif %}

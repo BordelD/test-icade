@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Manager\FootballManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class FootController extends AbstractController
 {
-    #[Route('/list', name: 'foot_list')]
+    #[Route('/', name: 'foot_list')]
     public function list(FootballManager $footballManager)
     {
         $frenchLeagueId = 61;
@@ -26,5 +28,22 @@ class FootController extends AbstractController
         return $this->render('components/fixture_details.html.twig', [
             'events' => $footballManager->getEvents($fixtureId),
         ]);
+    }
+
+    #[Route('/search', name: 'foot_search')]
+    public function search(FootballManager $footballManager, Request $request)
+    {
+        $search = $request->query->get('q');
+        if (null === $search || strlen($search) < 3)
+        {
+            return new Response(null, Response::HTTP_NO_CONTENT);
+        }
+
+        return $this->render(
+            'components/search_result.html.twig',
+            [
+                'teamInfos' => $footballManager->searchTeam($search),
+            ]
+        );
     }
 }

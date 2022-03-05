@@ -1,24 +1,11 @@
-{% set classes = ['header'] %}
-
-{% if props.back is defined and props.back is not null %}
-    {% set classes = classes|merge(['header--with-back']) %}
-{% endif %}
-
-<header class="{{ classes|join(' ')|raw }}">
-    <div class="container header_inner">
-        {% if props.back is defined and props.back is not null %}
-            <a class="header_back" href="{{ props.back.href }}" title="{{ props.back.title|default('') }}">
-{#                {% include 'components/atoms/icon/icon.html.twig' with { props: { icon: 'arrow' }} %}#}
-            </a>
-        {% endif %}
-
-        <a class="header_logo" href="{{ path('foot_list') }}">
-{#            {% include 'components/atoms/image/image.html.twig' with {#}
-{#                props: {#}
-{#                    src: asset('build/logo.svg'),#}
-{#                    alt: 'The Web Telegraph',#}
-{#                }#}
-{#            } %}#}
-        </a>
-    </div>
-</header>
+<nav class="navbar navbar-light bg-light justify-content-between p-2">
+    <a class="navbar-brand">Navbar</a>
+    <form class="form-inline" {{ stimulus_controller('autocomplete', {
+        'url': path('foot_search'),
+        'min-length': 3,
+    }) }}>
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" {{ stimulus_target('autocomplete', 'input') }}>
+        <input type="hidden" name="bird_id" {{ stimulus_target('autocomplete', 'hidden') }} />
+        <ul class="list-group" {{ stimulus_target('autocomplete', 'results') }} ></ul>
+    </form>
+</nav>

@@ -7,6 +7,7 @@ use App\Model\Event\Event;
 use App\Model\Fixture;
 use App\Model\Response as FixtureResponse;
 use App\Model\Event\Response as EventResponse;
+use App\Model\Team\Response as TeamResponse;
 use JMS\Serializer\SerializerInterface;
 
 class FootballManager
@@ -42,6 +43,16 @@ class FootballManager
 
         /** @var EventResponse $response */
         $response = $this->serializer->deserialize($content, EventResponse::class, 'json');
+
+        return $response->response;
+    }
+
+    public function searchTeam(string $search): array
+    {
+        $content = $this->client->searchTeam($search);
+
+        /** @var TeamResponse $response */
+        $response = $this->serializer->deserialize($content, TeamResponse::class, 'json');
 
         return $response->response;
     }
